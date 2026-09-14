@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>Read QR by Eye</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23fff'/%3E%3Cpath d='M1 1h6v6H1zM9 1h6v6H9zM1 9h6v6H1z' fill='none' stroke='%230f172a' stroke-width='2'/%3E%3Crect x='10' y='10' width='3' height='3' fill='%23e11d48'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <button class="brand" id="homeBtn" type="button" data-i18n-aria="home">
+      <span class="logo" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span data-i18n="brand">Read QR by Eye</span>
+    </button>
+    <div class="topbar-actions">
+      <div class="lesson-meta" id="lessonMeta" hidden></div>
+      <button class="ghost lang" id="langBtn" type="button" lang="ar" data-i18n="langBtn">العربية</button>
+      <button class="ghost" id="backBtn" type="button" data-i18n="home" hidden>Home</button>
+    </div>
+  </header>
+
+  <section id="picker" class="picker">
+    <div class="hero">
+      <h1 data-i18n="heroTitle">Every QR code can be read by eye</h1>
+      <p data-i18n="heroText">A scanner does nothing magical: it follows fixed rules.</p>
+    </div>
+
+    <div class="section-head">
+      <h2><span class="num">1</span><span data-i18n="fundamentals">Fundamentals</span></h2>
+      <div class="progress-wrap"><span id="progressText"></span><div class="progress"><i id="progressBar"></i></div></div>
+      <button class="primary" id="continueBtn" type="button"></button>
+    </div>
+    <div class="lesson-grid" id="lessonGrid"></div>
+
+    <div class="section-head">
+      <h2><span class="num">2</span><span data-i18n="readByEye">Read by eye</span></h2>
+    </div>
+    <div class="tabs" role="tablist">
+      <button role="tab" class="tab on" data-tab="samples" type="button" data-i18n="tabSamples">Examples</button>
+      <button role="tab" class="tab" data-tab="custom" type="button" data-i18n="tabCustom">Type text</button>
+      <button role="tab" class="tab" data-tab="image" type="button" data-i18n="tabImage">From an image</button>
+    </div>
+
+    <div class="tab-panel" id="tab-samples">
+      <div class="sample-grid" id="sampleGrid"></div>
+    </div>
+
+    <div class="tab-panel" id="tab-custom" hidden>
+      <form class="custom-form" id="customForm">
+        <label class="wide"><span data-i18n="fText">Text</span>
+          <textarea id="cText" rows="3" dir="auto" maxlength="1200">HELLO 2026</textarea>
+        </label>
+        <label><span data-i18n="fMode">Encoding mode</span>
+          <select id="cMode">
+            <option value="auto" data-i18n="modeAuto">Automatic</option>
+            <option value="numeric" data-i18n="modeNumeric">Numeric</option>
+            <option value="alphanumeric" data-i18n="modeAlnum">Alphanumeric</option>
+            <option value="byte" data-i18n="modeByte">Byte</option>
+            <option value="kanji" data-i18n="modeKanji">Kanji</option>
+          </select>
+        </label>
+        <label><span data-i18n="fEcl">Error correction level</span>
+          <select id="cEcl">
+            <option value="L">L (7%)</option>
+            <option value="M" selected>M (15%)</option>
+            <option value="Q">Q (25%)</option>
+            <option value="H">H (30%)</option>
+          </select>
+        </label>
+        <label><span data-i18n="fVersion">Version</span>
+          <select id="cVersion"><option value="auto" data-i18n="versionAuto">Smallest that fits</option></select>
+        </label>
+        <label><span data-i18n="fMask">Mask</span>
+          <select id="cMask"><option value="auto" data-i18n="maskAuto">Best (automatic)</option></select>
+        </label>
+        <div class="form-foot wide">
+          <p class="error" id="customError" hidden></p>
+          <button class="primary" type="submit" data-i18n="startWalkthrough">Start the walkthrough</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="tab-panel" id="tab-image" hidden>
+      <label class="dropzone" id="dropzone">
+        <input type="file" id="fileInput" accept="image/*" hidden>
+        <strong data-i18n="dropTitle">Choose an image with a QR code</strong>
+        <span data-i18n="dropText">Or drag it here, or paste it with Ctrl+V.</span>
+      </label>
+      <p class="error" id="imageError" hidden></p>
+      <p class="hint" data-i18n="imageHint">The image is not uploaded anywhere.</p>
+    </div>
+  </section>
+
+  <main id="learn" class="lesson learnview" hidden>
+    <section class="stage" id="learnStageHome">
+      <div class="learn-stage" id="learnStage"></div>
+    </section>
+    <aside class="panel">
+      <div class="learn-top"><span id="learnLabel"></span><div class="dots" id="learnDots"></div></div>
+      <h2 id="learnTitle"></h2>
+      <div class="step-body" id="learnScroll">
+        <div id="learnBody"></div>
+        <!-- On a phone the widget moves here, between the explanation and the task. -->
+        <div class="learn-slot" id="learnSlot"></div>
+        <div id="learnExtras"></div>
+      </div>
+      <div class="nav">
+        <button type="button" id="learnPrev" class="ghost" data-i18n="prev">Previous</button>
+        <a id="learnReturn" class="ghost-link" data-i18n="backToCode" hidden>Back to the code</a>
+        <button type="button" id="learnNext" class="primary" data-i18n="next">Next</button>
+      </div>
+    </aside>
+  </main>
+
+  <main id="lesson" class="lesson" hidden>
+    <section class="stage">
+      <div class="canvas-wrap" id="canvasWrap"><canvas id="grid" data-i18n-aria="gridAria"></canvas></div>
+      <div class="stage-bar">
+        <div class="legend" id="legend"></div>
+        <div class="stage-tools" id="stageTools">
+          <button type="button" class="tool" data-tool="replay" data-i18n="replay">Replay</button>
+          <div class="seg" data-tool="compare"><button type="button" data-v="before" data-i18n="before">Before</button><button type="button" data-v="after" class="on" data-i18n="after">After</button></div>
+          <label class="toggle"><input type="checkbox" id="autoZoom" checked> <span data-i18n="autoZoom">Auto zoom</span></label>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="notice" id="readerNotice" hidden>
+        <span data-i18n="notice"></span>
+        <button type="button" id="noticeClose" data-i18n-aria="closeAria">×</button>
+      </div>
+      <nav class="chapters" id="chapters"></nav>
+      <div class="step-count" id="stepCount"></div>
+      <h2 id="stepTitle"></h2>
+      <div class="step-body" id="stepBody"></div>
+      <div class="nav">
+        <button type="button" id="prevBtn" class="ghost" data-i18n="prev">Previous</button>
+        <select id="jump" data-i18n-aria="jumpAria"></select>
+        <button type="button" id="nextBtn" class="primary" data-i18n="next">Next</button>
+      </div>
+    </aside>
+  </main>
+
+  <script src="vendor/jsQR.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/gf.js"></script>
+  <script src="js/tables.js"></script>
+  <script src="js/encoder.js"></script>
+  <script src="js/decoder.js"></script>
+  <script src="js/steps.js"></script>
+  <script src="js/samples.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/image.js"></script>
+  <script src="js/widgets.js"></script>
+  <script src="js/lessons.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
