@@ -143,6 +143,7 @@
       const s = Math.min(W / vp.w, H / vp.h);
       const ox = (W - vp.w * s) / 2 - vp.x * s;
       const oy = (H - vp.h * s) / 2 - vp.y * s;
+      this.geo = { s, ox, oy };
       const n = d.size;
       const view = step.view;
       const dpr = this.dpr;
@@ -275,6 +276,18 @@
       }
 
       if (cssCell >= 11) this.drawRulers(ox, oy, s, r0, r1, c0, c1, cssCell);
+    }
+
+    // The module under a point on screen, from the last drawn frame.
+    hitCell(clientX, clientY) {
+      if (!this.geo || !this.d) return null;
+      const rect = this.canvas.getBoundingClientRect();
+      const x = (clientX - rect.left) * this.dpr;
+      const y = (clientY - rect.top) * this.dpr;
+      const c = Math.floor((x - this.geo.ox) / this.geo.s);
+      const r = Math.floor((y - this.geo.oy) / this.geo.s);
+      const n = this.d.size;
+      return r >= 0 && c >= 0 && r < n && c < n ? [r, c] : null;
     }
 
     // Adds the outer edges of a set of cells to the current path.

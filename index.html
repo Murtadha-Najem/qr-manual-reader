@@ -93,7 +93,64 @@
       <p class="error" id="imageError" hidden></p>
       <p class="hint" data-i18n="imageHint">The image is not uploaded anywhere.</p>
     </div>
+
+    <div class="section-head">
+      <h2><span class="num">3</span><span data-i18n="practice">Practice with a timer</span></h2>
+    </div>
+    <p class="section-sub" data-i18n="practiceText">Read a random code yourself and time it.</p>
+    <div class="practice-grid" id="practiceGrid"></div>
   </section>
+
+  <main id="practice" class="lesson practiceview" hidden>
+    <section class="stage">
+      <div class="canvas-wrap" id="pCanvasWrap">
+        <canvas id="pGrid" data-i18n-aria="gridAria"></canvas>
+        <div class="p-cover" id="pCover">
+          <button type="button" class="primary" id="pStart" data-i18n="pStart">Start the timer</button>
+          <p data-i18n="pCoverText">The code stays hidden until you start.</p>
+        </div>
+      </div>
+      <div class="stage-bar p-aids">
+        <span class="p-timer p-timer-mini" id="pTimerMini" dir="ltr">00:00</span>
+        <label class="toggle"><input type="checkbox" data-aid="dim"> <span data-i18n="aidDim">Dim fixed parts</span></label>
+        <label class="toggle"><input type="checkbox" data-aid="mask"> <span data-i18n="aidMask">Mask dots</span></label>
+        <label class="toggle"><input type="checkbox" data-aid="path"> <span data-i18n="aidPath">Reading path</span></label>
+        <button type="button" class="tool" id="pClearMarks" data-i18n="clearMarks">Clear marks</button>
+      </div>
+    </section>
+    <aside class="panel">
+      <div class="p-head"><span class="p-level" id="pLevel"></span><span class="p-timer" id="pTimer" dir="ltr">00:00</span></div>
+      <div class="step-body">
+        <p data-i18n="pIntro"></p>
+        <div class="p-check" data-field="ecl">
+          <label><span data-i18n="pLevelLabel">Error correction level</span>
+            <select id="pEcl"><option value="">?</option><option>L</option><option>M</option><option>Q</option><option>H</option></select></label>
+          <button type="button" class="ghost" data-i18n="pCheck">Check</button>
+          <div class="p-res" aria-live="polite"></div>
+        </div>
+        <div class="p-check" data-field="mask">
+          <label><span data-i18n="pMaskLabel">Mask</span>
+            <select id="pMask"><option value="">?</option><option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></label>
+          <button type="button" class="ghost" data-i18n="pCheck">Check</button>
+          <div class="p-res" aria-live="polite"></div>
+        </div>
+        <div class="p-check" data-field="text">
+          <label><span data-i18n="pTextLabel">Message</span>
+            <input type="text" id="pText" dir="auto" autocomplete="off" autocapitalize="off" spellcheck="false"></label>
+          <button type="button" class="primary" data-i18n="pCheck">Check</button>
+          <div class="p-res" aria-live="polite"></div>
+        </div>
+        <div id="pResult" hidden></div>
+        <div class="p-actions">
+          <button type="button" class="ghost" id="pGiveUp" data-i18n="pGiveUpBtn">Give up and show the answer</button>
+          <a class="tool" id="pWalk" data-i18n="pWalk" hidden>See this code step by step</a>
+          <button type="button" class="ghost" id="pNew" data-i18n="pNew">New code</button>
+          <button type="button" class="ghost" id="pDownload" data-i18n="pDownload">Download for paper</button>
+        </div>
+        <div class="p-stats" id="pStats"></div>
+      </div>
+    </aside>
+  </main>
 
   <main id="learn" class="lesson learnview" hidden>
     <section class="stage" id="learnStageHome">
@@ -158,6 +215,7 @@
   <script src="js/image.js"></script>
   <script src="js/widgets.js"></script>
   <script src="js/lessons.js"></script>
+  <script src="js/practice.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

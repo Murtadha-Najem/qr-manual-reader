@@ -72,10 +72,12 @@
     if (widget) { widget.destroy(); widget = null; }
   }
   function showView(name) {
-    const changed = (name === 'picker' && $('picker').hidden) || (name === 'reader' && $('lesson').hidden) || (name === 'learn' && $('learn').hidden);
+    const changed = (name === 'picker' && $('picker').hidden) || (name === 'reader' && $('lesson').hidden) || (name === 'learn' && $('learn').hidden) || (name === 'practice' && $('practice').hidden);
     $('picker').hidden = name !== 'picker';
     $('lesson').hidden = name !== 'reader';
     $('learn').hidden = name !== 'learn';
+    $('practice').hidden = name !== 'practice';
+    if (name !== 'practice') Q.practice.stop();
     $('backBtn').hidden = name === 'picker';
     $('lessonMeta').hidden = name !== 'reader';
     if (name !== 'learn') destroyWidget();
@@ -84,7 +86,21 @@
   function showPicker() {
     showView('picker');
     renderLessonGrid();
+    renderPracticeCards();
   }
+
+  // ---------- Home: practice ----------
+  function renderPracticeCards() {
+    $('practiceGrid').innerHTML = Q.practice.LEVELS.map((level) => {
+      const key = { easy: 'Easy', medium: 'Medium', hard: 'Hard' }[level];
+      const b = Q.practice.best(level);
+      return `<button type="button" class="p-card" data-level="${level}"><strong>${t('level' + key)}</strong><span>${t('level' + key + 'Desc')}</span><em class="${b == null ? 'none' : ''}">${b == null ? t('noTimeYet') : t('bestTime', { time: Q.practice.fmt(b) })}</em></button>`;
+    }).join('');
+  }
+  $('practiceGrid').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-level]');
+    if (b) location.hash = `practice=${b.dataset.level}`;
+  });
   function goHome() {
     state.returnTo = null;
     history.replaceState(null, '', location.pathname);
@@ -504,7 +520,10 @@
     $('langBtn').lang = I.lang === 'en' ? 'ar' : 'en';
     renderSampleCards();
     renderLessonGrid();
-    if (!$('learn').hidden && state.learn) {
+    renderPracticeCards();
+    if (!$('practice').hidden) {
+      Q.practice.render();
+    } else if (!$('learn').hidden && state.learn) {
       openLesson(state.learn.id, state.learn.page);
     } else if (!$('lesson').hidden && state.d) {
       const i = state.i;
@@ -526,6 +545,17 @@
       return;
     }
     state.returnTo = null;
+    if (p.get('practice')) {
+      const level = Q.practice.LEVELS.includes(p.get('practice')) ? p.get('practice') : 'medium';
+      let seed = Number(p.get('seed'));
+      if (!seed) {
+        seed = 1 + Math.floor(Math.random() * 999999);
+        history.replaceState(null, '', `#practice=${level}&seed=${seed}`);
+      }
+      showView('practice');
+      Q.practice.start(level, seed);
+      return;
+    }
     if (p.get('s')) startSample(p.get('s'), step);
     else if (p.get('t') !== null) {
       $('cText').value = p.get('t');

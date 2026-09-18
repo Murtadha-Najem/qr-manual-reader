@@ -19,6 +19,7 @@ const EDGE = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
   const watch = (page) => {
     page.on('console', (m) => { if (m.type() === 'error') report.errors.push(m.text()); });
     page.on('pageerror', (e) => report.errors.push('pageerror: ' + e.message));
+    page.on('requestfailed', (r) => report.errors.push(`requestfailed: ${r.url()} (${r.failure() && r.failure().errorText})`));
   };
 
   const ctx = await browser.newContext({ viewport: { width: 1366, height: 860 }, deviceScaleFactor: 1 });

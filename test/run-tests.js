@@ -8,7 +8,7 @@ const toSJIS = require('qrcode/helper/to-sjis');
 const jsQR = require('jsqr');
 
 const load = (f) => vm.runInThisContext(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'), { filename: f });
-['js/i18n.js', 'js/gf.js', 'js/tables.js', 'js/encoder.js', 'js/decoder.js', 'js/steps.js', 'js/samples.js', 'js/widgets.js', 'js/lessons.js'].forEach((f) => {
+['js/i18n.js', 'js/gf.js', 'js/tables.js', 'js/encoder.js', 'js/decoder.js', 'js/steps.js', 'js/samples.js', 'js/widgets.js', 'js/lessons.js', 'js/practice.js'].forEach((f) => {
   if (fs.existsSync(path.join(__dirname, '..', f))) load(f);
 });
 const { gf, spec, encoder, decoder } = globalThis.QRT;
@@ -224,6 +224,28 @@ if (globalThis.QRT.lessons && globalThis.QRT.widgets) {
     check(`sample ${s.id} links to lessons`, steps.some((st) => st.body.includes('#learn=')));
   }
   }
+}
+
+// 9. Practice codes: reproducible, decodable, and in the promised size range.
+if (globalThis.QRT.practice) {
+  const P = globalThis.QRT.practice;
+  const range = { easy: [1, 1], medium: [2, 4], hard: [4, 8] };
+  const modes = { easy: ['numeric', 'alphanumeric'], medium: ['byte'], hard: ['byte'] };
+  for (const level of P.LEVELS) {
+    for (let seed = 1; seed <= 60; seed++) {
+      const g = P.generate(level, seed * 7919);
+      const again = P.generate(level, seed * 7919);
+      const d = decoder.analyze(g.matrix);
+      check(`practice ${level} ${seed} decodes`, d.text === g.text && d.format.ecl === g.ecl && d.format.mask === g.mask, `${g.text} vs ${d.text}`);
+      check(`practice ${level} ${seed} size`, g.version >= range[level][0] && g.version <= range[level][1] && d.version === g.version, `v${g.version}`);
+      check(`practice ${level} ${seed} mode`, modes[level].includes(g.mode) && d.segments[0].mode === g.mode);
+      check(`practice ${level} ${seed} reproducible`, again.text === g.text && again.mask === g.mask && again.version === g.version);
+      const walk = encoder.encode({ text: g.text, mode: g.mode, ecl: g.ecl, version: g.version, mask: g.mask });
+      check(`practice ${level} ${seed} walkthrough link rebuilds the same code`, walk.matrix.every((row, r) => row.every((v, c) => v === g.matrix[r][c])));
+    }
+  }
+  const hardMulti = Array.from({ length: 30 }, (_, i) => P.generate('hard', i + 1)).filter((g) => spec.blockInfo(g.version, g.ecl).numBlocks > 1).length;
+  check('hard practice codes use several blocks', hardMulti === 30, `${hardMulti} of 30`);
 }
 
 console.log(`pass ${pass}  fail ${fail}`);

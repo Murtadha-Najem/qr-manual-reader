@@ -424,6 +424,47 @@ table.xor.w-ftable th { white-space: normal; width: 128px; min-width: 0; max-wid
   button.lang { padding: 6px 10px; }
 }
 
+/* ---------- Practice ---------- */
+.section-sub { margin: -6px 0 14px; color: var(--ink-2); max-width: 720px; }
+.practice-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.p-card { display: flex; flex-direction: column; gap: 4px; text-align: start; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; cursor: pointer; color: var(--ink); transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s; }
+.p-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08); border-color: #cbd5e1; }
+.p-card strong { font-size: 17px; }
+.p-card span { color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+.p-card em { font-style: normal; font-size: 13.5px; font-weight: 600; color: #15803d; margin-top: 4px; }
+.p-card em.none { color: var(--muted); font-weight: 500; }
+#practice .canvas-wrap { position: relative; }
+.p-cover { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 24px; text-align: center; background: rgba(248, 250, 252, 0.94); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: var(--ink-2); }
+.p-cover button { min-height: 48px; padding: 0 26px; font-size: 17px; }
+.p-cover p { margin: 0; max-width: 300px; font-size: 14.5px; }
+#practice .p-aids { flex-wrap: wrap; justify-content: flex-start; gap: 8px 16px; }
+.p-timer-mini { display: none; }
+#practice canvas#pGrid { cursor: pointer; }
+.p-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 20px 6px; }
+.p-level { color: var(--muted); font-size: 14px; font-weight: 600; }
+.p-timer { font-family: var(--mono); font-size: 32px; font-weight: 700; color: var(--ink); letter-spacing: 1px; }
+.p-timer.done { color: #15803d; }
+.p-check { display: grid; grid-template-columns: 1fr auto; gap: 6px 8px; align-items: end; margin-bottom: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); }
+.p-check label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; font-size: 14px; color: var(--ink); min-width: 0; }
+.p-check select, .p-check input { border: 1px solid var(--line); border-radius: 9px; padding: 8px 10px; background: #fff; font-size: 16px; min-height: 44px; width: 100%; }
+.p-check button { min-height: 44px; }
+.p-check .p-res { grid-column: 1 / -1; font-size: 14px; }
+.p-check .p-res:empty { display: none; }
+.p-check.ok { border-color: #16a34a; background: #f0fdf4; }
+.p-check.shake { animation: shake 0.35s; }
+.p-result { border: 2px solid #16a34a; background: #f0fdf4; border-radius: 12px; padding: 12px 16px; margin-bottom: 14px; color: var(--ink); }
+.p-result h3 { margin: 0 0 6px; font-size: 21px; }
+.p-result ul { margin: 0 0 8px; padding-inline-start: 20px; }
+.p-result p { margin: 0 0 6px; }
+.p-result.gaveup { border-color: #f59e0b; background: #fffbeb; }
+.p-answer { font-size: 19px; font-weight: 700; word-break: break-word; }
+.p-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 18px; }
+.p-actions button, .p-actions a { min-height: 44px; }
+.p-actions a.tool { display: inline-flex; align-items: center; text-decoration: none; color: #1d4ed8; border-color: #bfdbfe; background: #eff6ff; font-weight: 600; }
+.p-actions a.tool[hidden] { display: none; }
+.p-stats h3 { font-size: 15px; margin: 0 0 4px; color: var(--ink); }
+.p-stats p { margin: 0 0 8px; }
+
 /* ---------- Phone ---------- */
 button, .tab, .w-chip, .w-part, a.concept { touch-action: manipulation; }
 .learn-slot:empty { display: none; }
@@ -434,7 +475,9 @@ button, .tab, .w-chip, .w-part, a.concept { touch-action: manipulation; }
   .brand { font-size: 16px; gap: 8px; min-height: 40px; }
   .topbar-actions button { min-height: 40px; }
 
-  .lesson { padding: 0 0 calc(78px + env(safe-area-inset-bottom)); gap: 0; }
+  .lesson { padding: 0 0 calc(78px + env(safe-area-inset-bottom)); gap: 0; grid-template-columns: minmax(0, 1fr); }
+  /* A row that scrolls sideways must not widen the page column. */
+  .lesson > *, .stage, .stage-bar { min-width: 0; }
   .lesson .panel { border-radius: 0; border-width: 1px 0 0; min-height: 0; max-height: none; position: static; }
   .step-body { padding: 0 16px 18px; overflow: visible; }
   .panel h2 { margin: 2px 16px 8px; font-size: 20px; }
@@ -460,6 +503,18 @@ button, .tab, .w-chip, .w-part, a.concept { touch-action: manipulation; }
   .nav select, .nav .ghost-link { min-height: 46px; }
   .nav .ghost-link { display: inline-flex; align-items: center; justify-content: center; padding: 0 10px; font-size: 13px; }
   .nav .ghost-link[hidden] { display: none; }
+
+  /* Practice: the code stays pinned while the answer boxes scroll beneath it. */
+  #practice .stage { position: sticky; top: var(--topbar-h, 57px); z-index: 6; background: var(--bg); padding: 8px 10px 6px; gap: 6px; box-shadow: 0 8px 14px -12px rgba(15, 23, 42, 0.45); }
+  #practice .canvas-wrap { width: min(100%, 42vh); width: min(100%, 42dvh); }
+  #practice .stage-bar { width: 100%; gap: 4px 12px; font-size: 13px; }
+  #practice .p-aids { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; white-space: nowrap; align-items: center; }
+  #practice .p-aids::-webkit-scrollbar { display: none; }
+  #practice .p-aids > * { flex: none; }
+  #practice .stage-bar .tool { min-height: 36px; }
+  .p-timer-mini { display: inline-block; font-size: 20px; letter-spacing: 0.5px; padding-inline-end: 4px; }
+  .p-head { padding: 12px 16px 4px; }
+  .p-timer { font-size: 26px; }
 
   /* Lessons: explanation, then the widget, then the task and quiz. */
   .learnview > .stage { display: none; }

@@ -27,7 +27,9 @@ const EDGE = 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe';
       await p.reload();
       await p.waitForTimeout(900);
     };
-    const overflow = () => p.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
+    // Compare with the real phone width: in mobile emulation the layout viewport grows to fit
+    // wide content, so innerWidth alone would hide an overflow.
+    const overflow = () => p.evaluate((vw) => document.documentElement.scrollWidth > vw + 1 || innerWidth > vw + 1, w);
 
     // Home.
     await open('');

@@ -12,6 +12,10 @@ Before reading any code, eleven short interactive lessons explain every concept 
 
 Underlined terms in the reader link to the lesson that explains them, and the lesson offers a button back to the same step.
 
+## Timed practice
+
+A random code at three levels: Easy (version 1, digits or capitals), Common (versions 2 to 4, a short link or phrase) and Hard (version 4 and up, interleaved blocks). The code stays hidden until the timer starts. The level and mask can be checked on the way for split times; a wrong message says how many leading characters are right. Optional aids (dim fixed parts, mask dots, reading path) are recorded with the time, modules can be tapped to mark progress, and the code can be downloaded large with row and column numbers for pen and paper. Best times and recent attempts are kept per level in the browser. Every code comes from a seed in the address (`#practice=medium&seed=4242`), so it can be shared or replayed, and a finished code links to its own step-by-step walkthrough.
+
 ## What a code walkthrough covers
 
 1. Structure: finder, timing and alignment patterns, the dark module, reserved areas, the data region.
@@ -79,6 +83,12 @@ node test/phone.js <output-folder>
 ```
 
 Phone layout at 390 and 360 pixels wide, in English and Arabic: the walkthrough grid stays pinned under the top bar while the explanation scrolls, the step title is on the first screen, the bottom navigation stays in view, swiping the grid changes step (direction flips in Arabic), lessons show the explanation before the widget, nothing overflows sideways, no touch target is under 32px, and the desktop layout is unchanged.
+
+```bash
+node test/practice-visual.js <output-folder>
+```
+
+Timed practice end to end: hidden code before start, the timer, aids and marks, wrong then right checkpoints, the finished result and saved best time, the walkthrough link rebuilding the same code, giving up, a language switch mid-run, and the phone layout (code and a small timer stay pinned while the answer boxes scroll).
 
 ```bash
 node test/lessons-visual.js <output-folder>
