@@ -1,6 +1,6 @@
 # Read QR by Eye (اقرأ الـQR بعينك)
 
-**Live site: https://murtadha203.github.io/qr-manual-reader/**
+**Live site: https://murtadha-najem.github.io/qr-manual-reader/**
 
 English by default, with a full Arabic version one click away (the language button in the top bar; the choice is remembered per browser). Every lesson, step, widget and message exists in both languages, kept side by side in the same files so they cannot drift apart.
 
